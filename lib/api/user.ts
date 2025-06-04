@@ -40,3 +40,30 @@ export function useUser(email: string) {
     staleTime: 1000 * 60 * 5,
   });
 }
+
+export async function updateUserInfo(data: {
+  email: string;
+  name?: string;
+  phone?: string;
+  profession?: string;
+}): Promise<void> {
+  const url = `${API_BASE_URL}/api/profile`;
+
+  // Create FormData to match your server expected input
+  const formData = new FormData();
+  formData.append("email", data.email);
+  if (data.name) formData.append("name", data.name);
+  if (data.phone) formData.append("phone", data.phone);
+  if (data.profession) formData.append("profession", data.profession);
+
+  const res = await fetch(url, {
+    method: "POST",
+    body: formData,
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error?.error || "Failed to update user info");
+  }
+}

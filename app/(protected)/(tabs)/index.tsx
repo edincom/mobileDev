@@ -1,22 +1,35 @@
 import { Button } from '@/components/Button';
 import CardSheet from '@/components/CardSheet';
-import { useCards } from '@/lib/api/cards';
+import { deleteCard, useCards } from '@/lib/api/cards';
 import { AuthContext } from '@/utils/authContext';
+import { useRouter } from 'expo-router'; // ✅ import
 import React, { useContext } from 'react';
+
 import { FlatList, StyleSheet, Text, View } from 'react-native';
+
 
 export default function Index() {
   const authContext = useContext(AuthContext);
-  const email = 'leo@messi.com'; // hardcoded
-  const { data: cards, isLoading, error } = useCards(email);
+  const { email } = useContext(AuthContext); // get email from context
+  //const email = 'edincomor@gmail.com';
+  const { data: cards, isLoading, error, refetch } = useCards(email);
+  const router = useRouter(); // ✅ get router
 
   const handleCardPress = (id: string) => {
-    console.log(`Navigate to /study/${id}`); // navigation not implemented yet
+    router.push(`/study/${id}`); // ✅ dynamic navigation
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteCard(id);
+      await refetch();
+    } catch (err: any) {
+      console.error('Failed to delete card', err);
+    }
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Stak</Text>
 
       {isLoading && <Text style={styles.text}>Loading cards...</Text>}
       {error && <Text style={styles.text}>Error: {error.message}</Text>}
@@ -28,8 +41,9 @@ export default function Index() {
         renderItem={({ item }) => (
           <CardSheet
             card={item}
-            showDelete // just for display
+            showDelete
             onPress={handleCardPress}
+            onDelete={handleDelete}
           />
         )}
         contentContainerStyle={styles.cardGrid}
@@ -39,6 +53,8 @@ export default function Index() {
         title="Log Out"
         onPress={() => authContext?.logOut()}
         disabled={false}
+        style={styles.logoutButton}
+        textStyle={styles.logoutText}
       />
     </View>
   );
@@ -61,5 +77,22 @@ const styles = StyleSheet.create({
   },
   cardGrid: {
     paddingHorizontal: 16,
+  },
+  logoutButton: {
+    backgroundColor: "#ff4d4f",
+    paddingVertical: 14,
+    paddingHorizontal: 32,
+    borderRadius: 10,
+    marginTop: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  logoutText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 16,
+    textAlign: "center",
   },
 });

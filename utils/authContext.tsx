@@ -7,7 +7,8 @@ SplashScreen.preventAutoHideAsync();
 type AuthState = {
   isLoggedIn: boolean;
   isReady: boolean;
-  logIn: () => void;
+  email: string;
+  logIn: (email: string) => void;
   logOut: () => void;
 };
 
@@ -16,6 +17,7 @@ const authStorageKey = "auth-key";
 export const AuthContext = createContext<AuthState>({
   isLoggedIn: false,
   isReady: false,
+  email: "",
   logIn: () => {},
   logOut: () => {},
 });
@@ -23,41 +25,44 @@ export const AuthContext = createContext<AuthState>({
 export function AuthProvider({ children }: PropsWithChildren) {
   const [isReady, setIsReady] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [email, setEmail] = useState("");
   const router = useRouter();
 
-  const storeAuthState = async (newState: { isLoggedIn: boolean }) => {
+  const storeAuthState = async (newState: { isLoggedIn: boolean; email: string }) => {
     try {
       const jsonValue = JSON.stringify(newState);
       await AsyncStorage.setItem(authStorageKey, jsonValue);
     } catch (error) {
-      console.log("Error saving", error);
+      console.log("Error saving auth state", error);
     }
   };
 
-  const logIn = () => {
+  const logIn = (userEmail: string) => {
     setIsLoggedIn(true);
-    storeAuthState({ isLoggedIn: true });
+    setEmail(userEmail);
+    storeAuthState({ isLoggedIn: true, email: userEmail });
     router.replace("/");
   };
 
   const logOut = () => {
     setIsLoggedIn(false);
-    storeAuthState({ isLoggedIn: false });
+    setEmail("");
+    storeAuthState({ isLoggedIn: false, email: "" });
     router.replace("/login");
   };
 
   useEffect(() => {
     const getAuthFromStorage = async () => {
-      // simulate a delay, e.g. for an API request
       await new Promise((res) => setTimeout(() => res(null), 1000));
       try {
         const value = await AsyncStorage.getItem(authStorageKey);
         if (value !== null) {
           const auth = JSON.parse(value);
           setIsLoggedIn(auth.isLoggedIn);
+          setEmail(auth.email ?? "");
         }
       } catch (error) {
-        console.log("Error fetching from storage", error);
+        console.log("Error fetching auth from storage", error);
       }
       setIsReady(true);
     };
@@ -75,6 +80,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       value={{
         isReady,
         isLoggedIn,
+        email,
         logIn,
         logOut,
       }}

@@ -9,9 +9,11 @@ type CardSheetProps = {
   card: Card;
   showDelete?: boolean;
   onPress?: (id: string) => void;
+  onDelete?: (id: string) => void;
 };
 
-export default function CardSheet({ card, showDelete, onPress }: CardSheetProps) {
+
+export default function CardSheet({ card, showDelete, onPress, onDelete }: CardSheetProps) {
   return (
     <Pressable
       onPress={() => onPress?.(card.id)}
@@ -25,10 +27,7 @@ export default function CardSheet({ card, showDelete, onPress }: CardSheetProps)
       {showDelete && (
         <Pressable
           style={styles.deleteButton}
-          onPress={() => {
-            // No delete logic yet
-            console.log('Delete button pressed (noop)');
-          }}
+          onPress={() => onDelete?.(card.id)}
         >
           <Text style={styles.deleteText}>🗑️</Text>
         </Pressable>

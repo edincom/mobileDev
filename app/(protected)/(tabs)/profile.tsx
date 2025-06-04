@@ -1,9 +1,11 @@
-import { useUser } from "@/lib/api/user"; // import the hook
-import React, { useEffect, useState } from "react";
-import { Alert, Button, ScrollView, StyleSheet, Text, TextInput } from "react-native";
+import { updateUserInfo, useUser } from "@/lib/api/user"; // import updateUserInfo too
+import { AuthContext } from "@/utils/authContext";
+import React, { useContext, useEffect, useState } from "react";
+import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput } from "react-native";
 
 const ProfileScreen = () => {
-  const email = "edincomor@gmail.com"; // hardcoded for now
+  //const email = "edincomor@gmail.com"; // hardcoded for now
+  const { email } = useContext(AuthContext); // get email from context
 
   // React Query hook to fetch user data
   const { data: user, isLoading, error } = useUser(email);
@@ -12,6 +14,9 @@ const ProfileScreen = () => {
   const [name, setName] = useState("");
   const [profession, setProfession] = useState("");
   const [phone, setPhone] = useState("");
+
+  // Loading state for saving
+  const [isSaving, setIsSaving] = useState(false);
 
   // When user data loads, populate the form
   useEffect(() => {
@@ -22,15 +27,22 @@ const ProfileScreen = () => {
     }
   }, [user]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!name || !profession || !phone) {
       Alert.alert("Error", "Please fill out all fields");
       return;
     }
 
-    // TODO: Send updated data to backend or update context
-    console.log({ name, profession, phone });
-    Alert.alert("Success", "Profile saved!");
+    setIsSaving(true);
+
+    try {
+      await updateUserInfo({ email, name, profession, phone });
+      Alert.alert("Success", "Profile saved!");
+    } catch (err: any) {
+      Alert.alert("Error", err.message || "Failed to save profile");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   if (isLoading) return <Text style={{ textAlign: "center", marginTop: 20 }}>Loading...</Text>;
@@ -62,7 +74,11 @@ const ProfileScreen = () => {
         onChangeText={setPhone}
       />
 
-      <Button title="Save" onPress={handleSave} />
+      {isSaving ? (
+        <ActivityIndicator size="small" color="#0000ff" />
+      ) : (
+        <Button title="Save" onPress={handleSave} />
+      )}
     </ScrollView>
   );
 };
@@ -72,6 +88,7 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    backgroundColor: "#25292e",
     padding: 20,
     justifyContent: "center",
   },
@@ -80,8 +97,11 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     fontWeight: "bold",
     textAlign: "center",
+    color: "#fff",
   },
   input: {
+    backgroundColor: "#3c3f45",
+    color: "#fff",
     borderWidth: 1,
     borderColor: "#888",
     borderRadius: 8,

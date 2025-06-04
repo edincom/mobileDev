@@ -42,3 +42,40 @@ export function useCards(email: string) {
     staleTime: 1000 * 60 * 5,
   });
 }
+
+
+
+export async function deleteCard(id: string): Promise<{ success: boolean }> {
+  const res = await fetch(`${API_BASE_URL}/api/cards/${id}`, {
+    method: "DELETE",
+  });
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error?.error || "Erreur lors de la suppression de la carte");
+  }
+
+  return await res.json(); // { success: true }
+}
+
+
+export async function fetchCardById(id: string): Promise<Card> {
+  const res = await fetch(`${API_BASE_URL}/api/cards/${id}`);
+
+  if (!res.ok) {
+    const error = await res.json().catch(() => ({}));
+    throw new Error(error?.message || 'Error fetching card');
+  }
+
+  const data = await res.json();
+  return data.card;
+}
+
+export function useCardById(id: string) {
+  return useQuery({
+    queryKey: ["card", id],
+    queryFn: () => fetchCardById(id),
+    enabled: !!id, // Prevents it from running if id is undefined/null
+    staleTime: 1000 * 60 * 5,
+  });
+}

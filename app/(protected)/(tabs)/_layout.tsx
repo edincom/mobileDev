@@ -40,6 +40,7 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => (
               <Ionicons name="information-circle-outline" color={color} size={24} />
             ),
+            headerShown: false
           }}
         />
         <Tabs.Screen
@@ -53,6 +54,7 @@ export default function TabLayout() {
                 size={24}
               />
             ),
+            headerShown: false
           }}
         />
         <Tabs.Screen
@@ -66,6 +68,7 @@ export default function TabLayout() {
                 size={24}
               />
             ),
+            headerShown: false
           }}
         />
       </Tabs>
