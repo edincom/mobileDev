@@ -18,7 +18,7 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const router = useRouter(); // 👈 Add this line
+  const router = useRouter();
 
   const handleRegister = async () => {
     if (!email || !name || !profession || !password || !confirmPassword || !phone) {
@@ -40,9 +40,9 @@ const RegisterScreen = () => {
         profession,
       });
 
-      if (result?.user) {
-        Alert.alert('Success', `Welcome ${result.user.name}!`);
-        router.replace("/login"); // 👈 This is the actual redirection
+      if (result && !result.error) {
+        Alert.alert('Success', 'Registration successful!');
+        router.replace('/login');
       } else {
         Alert.alert('Error', result?.error || 'Registration failed');
       }
