@@ -1,5 +1,15 @@
+import { useRouter } from "expo-router";
 import React, { useState } from 'react';
-import { Alert, Button, ScrollView, StyleSheet, Text, TextInput } from 'react-native';
+import {
+  Alert,
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+} from 'react-native';
+import { registerUser } from '../lib/api/register';
+
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
@@ -8,8 +18,9 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState('');
+  const router = useRouter(); // 👈 Add this line
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!email || !name || !profession || !password || !confirmPassword || !phone) {
       Alert.alert('Error', 'Please fill out all fields');
       return;
@@ -20,9 +31,24 @@ const RegisterScreen = () => {
       return;
     }
 
-    // You can send the data to your backend here
-    console.log({ email, name, profession, password, phone });
-    Alert.alert('Success', 'User registered!');
+    try {
+      const result = await registerUser({
+        email,
+        name,
+        password,
+        phone,
+        profession,
+      });
+
+      if (result?.user) {
+        Alert.alert('Success', `Welcome ${result.user.name}!`);
+        router.replace("/login"); // 👈 This is the actual redirection
+      } else {
+        Alert.alert('Error', result?.error || 'Registration failed');
+      }
+    } catch (err: any) {
+      Alert.alert('Error', err.message || 'Something went wrong');
+    }
   };
 
   return (

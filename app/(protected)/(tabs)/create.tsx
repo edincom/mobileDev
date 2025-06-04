@@ -1,3 +1,4 @@
+import { generateCard } from "@/lib/api/create";
 import React, { useState } from "react";
 import { Alert, Button, ScrollView, StyleSheet, Text, TextInput } from "react-native";
 
@@ -6,15 +7,29 @@ const CreateScreen = () => {
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!title || !category || !content) {
       Alert.alert("Error", "Please fill out all fields");
       return;
     }
 
-    // Replace this with your actual logic for generating or saving the data
-    console.log({ title, category, content });
-    Alert.alert("Success", "Content generated!");
+    try {
+      const newCard = await generateCard({
+        title,
+        category,
+        content,
+        owner: "leo@messi.com", // Hardcoded for now
+      });
+
+      console.log("✅ Card created:", newCard);
+      Alert.alert("Success", "Card generated and saved!");
+      setTitle("");
+      setCategory("");
+      setContent("");
+    } catch (error: any) {
+      console.error("❌ Error generating card:", error.message);
+      Alert.alert("Error", error.message);
+    }
   };
 
   return (
@@ -72,6 +87,6 @@ const styles = StyleSheet.create({
   },
   textArea: {
     height: 120,
-    textAlignVertical: "top", // ensures multiline text starts at the top
+    textAlignVertical: "top",
   },
 });
