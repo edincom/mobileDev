@@ -88,7 +88,7 @@ const CreateScreen = () => {
       {loading ? (
         <View style={{ marginVertical: 20 }}>
           <ActivityIndicator size="large" color="#1e90ff" />
-          <Text style={{ textAlign: "center", marginTop: 8 }}>Generating cards...</Text>
+          <Text style={{ textAlign: "center", marginTop: 8, color: "#fff", }}>Generating cards...</Text>
         </View>
       ) : (
         <Button title="Generate" onPress={handleGenerate} />

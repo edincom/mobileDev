@@ -36,7 +36,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="about"
           options={{
-            title: 'About',
+            title: 'Search',
             tabBarIcon: ({ color }) => (
               <Ionicons name="information-circle-outline" color={color} size={24} />
             ),
