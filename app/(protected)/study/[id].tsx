@@ -3,14 +3,13 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import React, { useState } from 'react';
 import {
-    ActivityIndicator,
-    Pressable,
-    StyleSheet,
-    Text,
-    View
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View
 } from 'react-native';
 
-// 👇 Define param list inline
 type StackParamList = {
   Study: { id: string };
 };
@@ -108,7 +107,7 @@ export default function StudyScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1e3a8a',
+    backgroundColor: '#1e293b',
     padding: 16,
     justifyContent: 'center',
     alignItems: 'center',
@@ -119,40 +118,40 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   errorText: {
-    color: '#fff',
+    color: '#f87171',
     fontSize: 18,
   },
   title: {
-    color: '#fff',
+    color: '#f8fafc',
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 16,
     textAlign: 'center',
   },
   highlight: {
-    color: '#facc15',
+    color: '#fcd34d',
   },
   subtitle: {
-    color: '#ddd',
+    color: '#94a3b8',
     fontSize: 16,
     marginBottom: 20,
   },
   questionCard: {
-    backgroundColor: '#0ea5e9',
+    backgroundColor: '#2563eb',
     padding: 24,
     borderRadius: 16,
     width: '100%',
     marginBottom: 24,
   },
   questionText: {
-    color: '#fff',
+    color: '#f8fafc',
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 12,
     textAlign: 'center',
   },
   answerText: {
-    color: '#fff',
+    color: '#f8fafc',
     fontSize: 18,
     textAlign: 'center',
   },
@@ -163,14 +162,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   button: {
-    backgroundColor: '#1d4ed8',
+    backgroundColor: '#3b82f6',
     paddingVertical: 12,
     paddingHorizontal: 24,
     borderRadius: 24,
     margin: 8,
   },
   buttonText: {
-    color: '#fff',
+    color: '#f8fafc',
     fontWeight: 'bold',
   },
 });

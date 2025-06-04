@@ -29,7 +29,7 @@ export default function CardSheet({ card, showDelete, onPress, onDelete }: CardS
           style={styles.deleteButton}
           onPress={() => onDelete?.(card.id)}
         >
-          <Text style={styles.deleteText}>🗑️</Text>
+          <Text style={styles.deleteText}>X</Text>
         </Pressable>
       )}
     </Pressable>
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     width: 150,
     borderRadius: 16,
     overflow: 'hidden',
-    backgroundColor: '#38bdf8',
+    backgroundColor: '#3c3f45',
     padding: 16,
     justifyContent: 'center',
     alignItems: 'center',
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   title: {
-    color: 'white',
+    color: '#f1f5f9',
     fontWeight: 'bold',
     textAlign: 'center',
     fontSize: 16,
@@ -59,12 +59,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 8,
     right: 8,
-    backgroundColor: '#dc2626',
+    backgroundColor: '#ef4444',
     borderRadius: 12,
     padding: 4,
   },
   deleteText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 14,
   },
 });
